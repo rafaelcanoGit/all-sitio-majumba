@@ -8,10 +8,10 @@
       <br />
       <v-row>
         <v-col cols="0" md="6"> </v-col>
-        <v-col cols="12" md="6" >
+        <v-col cols="12" md="6">
           <v-text-field
-     
-            style="width:60%;float:right"
+            color="redUfps"
+            style="width: 60%; float: right"
             outlined
             dense
             hint="Nombre, Cargo"
@@ -33,51 +33,39 @@
           )"
           :key="index"
         >
-          <v-card
-            elevation="10"
-            color="#AA1916"
-            style="padding:1rem"
-            dark
-          >
-            <v-row>
-              <v-col cols="3" style="padding:0"
-                ><v-avatar size="50">
-                  <img
-                    :src="require('../../public/images/fotos/logoufps.png')"
-                    alt="logoufps"
-                  />
-                </v-avatar>
-              </v-col>
-              <v-col cols="6" style="padding:0">
-                <v-avatar size="90">
-                  <img
-                    :src="investigador.attributes.imagen "
-                    :alt="investigador.attributes.nombres"
-                  />
-                </v-avatar>
-              </v-col>
-              <v-col cols="3" style="padding:0"> </v-col>
-            </v-row>
-
-            <h3>{{ investigador.attributes.nombres }} {{ investigador.attributes.apellidos }}</h3>
-
-            <v-card-subtitle
-              >{{ investigador.attributes.cargo }}<br />
-              {{ investigador.attributes.nivel_estudio }}</v-card-subtitle
+          <v-card elevation="10" color="white" class="ma-5" shaped>
+            <v-img
+              :src="investigador.attributes.imagen"
+              :alt="investigador.attributes.nombres"
+              class="white--text align-end"
+              gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+              height="200px"
             >
-            <v-card-text style="color:#005cb2;font-weight:bold">
-              Telf: 5763891 Ext: 321</v-card-text
-            >
-            <v-btn
-              @click="goInvestigador(investigador.id)"
-              dark
-              class="primary"
-              color="white"
-              >Ver</v-btn
+              <v-card-title
+                v-text="
+                  investigador.attributes.nombres +
+                  ' ' +
+                  investigador.attributes.apellidos
+                "
+              ></v-card-title>
+            </v-img>
+
+            <v-card-text class="text-left font-weight-medium">
+              <strong class="black--text"> Cargo: </strong>
+              {{ investigador.attributes.cargo }} <br />
+              <strong class="black--text"> Nivel de estudio: </strong>
+              {{ investigador.attributes.nivel_estudio }} <br />
+              <strong class="black--text"> Email: </strong>
+              {{ investigador.attributes.email }}
+            </v-card-text>
+            <v-divider></v-divider>
+            <v-card-subtitle class="text-left redUfps--text">
+              <p class="font-italic">Telf: 5763891 Ext: 321</p></v-card-subtitle
             >
           </v-card>
         </v-col>
         <v-pagination
+          color="#AA1916"
           v-model="pagination.page"
           :length="
             Math.ceil(
@@ -91,7 +79,7 @@
           elevation="10"
           color="rgb(188,0,23)"
           width="80%"
-          style="padding:3rem;margin:auto auto;"
+          style="padding: 3rem; margin: auto auto"
         >
           <h2>No existen coincidencias</h2>
         </v-card>
@@ -111,81 +99,25 @@ export default {
         page: 1,
         perPage: 4,
       },
-      investigadores: [
-        {
-          id: 1,
-          nombre: "Ramiro",
-          apellido: "Cáceres",
-          cargo: "Investigador",
-          nivel_estudio: "Profesional",
-          email: "ramiro@gamil.com",
-          foto: "investigador1.png",
-        },
-        {
-          id: 2,
-          nombre: "Rafael",
-          apellido: "Cano",
-          cargo: "Director",
-          nivel_estudio: "Profesional",
-          email: "rafaelcano432@gmail.com",
-          foto: "investigador3.jpg",
-        },
-        {
-          id: 3,
-          nombre: "Esteban",
-          apellido: "Cáceres",
-          cargo: "Investigador",
-          nivel_estudio: "Profesional",
-          email: "ramiro@gamil.com",
-          foto: "investigador1.png",
-        },
-        {
-          id: 4,
-          nombre: "Miguel",
-          apellido: "Cáceres",
-          cargo: "Analista",
-          nivel_estudio: "Profesional",
-          email: "ramiro@gamil.com",
-          foto: "investigador2.png",
-        },
-        {
-          id: 5,
-          nombre: "Manuel",
-          apellido: "Cáceres",
-          cargo: "Investigador",
-          nivel_estudio: "Profesional",
-          email: "ramiro@gamil.com",
-          foto: "investigador1.png",
-        },
-        {
-          id: 6,
-          nombre: "Luis",
-          apellido: "Cáceres",
-          cargo: "Analista",
-          nivel_estudio: "Profesional",
-          email: "ramiro@gamil.com",
-          foto: "investigador2.png",
-        },
-      ],
     };
   },
   methods: {
     ...vuex.mapActions(["commitInvestigadores"]),
-    
+
     goInvestigador(id) {
       this.$router.push({ name: "investigador", params: { id } });
     },
-     perPage() {
+    perPage() {
       let screenWidth = screen.width;
       if (screenWidth > 1260) {
         this.pagination.perPage = 4;
         return;
       }
       if (screenWidth < 1260 && screenWidth > 960) {
-        this.pagination.perPage = 3; 
+        this.pagination.perPage = 3;
         return;
       }
-      if (screenWidth < 960 ) {
+      if (screenWidth < 960) {
         this.pagination.perPage = 2;
         return;
       }
@@ -202,7 +134,7 @@ export default {
           investigador.attributes.apellidos +
           " " +
           investigador.attributes.cargo;
-        
+
         if (filterBy.toLowerCase().match(this.searchText.toLowerCase())) {
           this.pagination.page = 1;
           return filterBy.toLowerCase().match(this.searchText.toLowerCase());
@@ -211,7 +143,9 @@ export default {
     },
   },
   created() {
-    this.commitInvestigadores();
+    if (!this.getInvestigadores.length) {
+      this.commitInvestigadores();
+    }
     this.perPage();
   },
 };
@@ -220,13 +154,8 @@ export default {
 <style lang="scss" scoped>
 #investigadores {
   padding: 4rem 2rem 1rem 2rem; //top right bottom left
-  background: linear-gradient(
-      rgba(255, 255, 255, 0.4),
-      rgba(255, 255, 255, 0.4)
-    ),
-    url(../../public/images/fotos/lab.jpg);
+  background: linear-gradient(#e9ecee, #e9ecee);
   background-size: cover;
   background-attachment: fixed;
 }
-
 </style>

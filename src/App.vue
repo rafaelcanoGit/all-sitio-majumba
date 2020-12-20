@@ -5,8 +5,8 @@
       :options="navbarOptions"
       @vnb-item-clicked="vnbItemClicked"
     />
-    <v-app> 
-      <router-view /> 
+    <v-app>
+      <router-view />
       <!-- muestra los demás componentes, con path:'/' -->
       <router-view name="noticias" />
       <!--  name para indicar componente -->
@@ -36,34 +36,21 @@ export default {
   data() {
     return {
       options: {
-        // container: '#container',
         easing: "ease-in-out",
         offset: -55,
         force: true,
         cancelable: true,
-        /*  onStart: function (element) {
-        // scrolling started
-    },
-    onDone: function (element) {
-        // scrolling is done
-    },
-    onCancel: function () {
-        // scrolling has been interrupted
-    }, */
         x: false,
         y: true,
       },
-
       Escroleando: false,
       navbarOptions: {
         elementId: "main-navbar",
         isUsingVueRouter: false,
-        mobileBreakpoint: 990,
-        brandImagePath: "/",
+        mobileBreakpoint: 1290,
+        brandImagePath: "http://bancodecepas.tgrado.ingsistemasufps.co",
         brandImage: require("../public/images/fotos/majumba2.png"),
         brandImageAltText: "brand-image",
-        collapseButtonImageOpen: null,
-        collapseButtonImageClose: null,
         showBrandImageInMobilePopup: true,
         ariaLabelMainNav: "Main Navigation",
         tooltipAnimationType: "shift-away",
@@ -141,6 +128,18 @@ export default {
             text: "Equipamentos",
             path: "",
           },
+          {
+            isLinkAction: true,
+            type: "link",
+            text: "Actividades",
+            path: "",
+          },
+          {
+            isLinkAction: true,
+            type: "link",
+            text: "Novedades",
+            path: "",
+          },
         ],
       },
     };
@@ -174,7 +173,7 @@ export default {
         //history.scrollRestoration = "manual";
         //    this.navbarOptions.collapseButtonImageOpen = require("../../../public/images/fotos/hamburguer-icon.png");
       } else {
-      this.navbarOptions.collapseButtonImageOpen = null;
+        this.navbarOptions.collapseButtonImageOpen = null;
       }
     },
   },
@@ -193,33 +192,10 @@ export default {
   text-align: center;
 }
 .shrink {
-  background: rgba(240, 239, 239, 1);
-  height: 4.5rem;
   width: 100%;
-  padding: 0.5rem;
   /*Sticky*/
   position: -webkit-sticky;
   position: fixed;
   z-index: 100; //Z-index permite el posicionamiento delante o detrás
-  transition: 0.7s; /* Adds a transition effect when the padding is decreased */
-
-  .vnb__menu-options__option__link {
-    color: black;
-  }
-
-  .vnb__brand-image-wrapper__link__image {
-    /*Imagen logo marca*/
-    max-height: 4rem;
-  }
 }
-
-/* [name] { // elementos con el atributo 'name' pd:no toma los router view
-  border:3px solid green;
-  height: 85vh;
-  width: 100%;
-
-  /*  background: url(../../../public/images/fotos/nature.jpg); 
-  background-size: cover;
-  background-attachment: fixed;
-} */
 </style>

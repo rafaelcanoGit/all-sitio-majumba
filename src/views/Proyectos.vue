@@ -1,15 +1,15 @@
 <template>
   <div>
     <hr />
-
     <section id="proyectos">
       <h1><v-icon color="black">mdi-text-box-multiple</v-icon> Proyectos</h1>
       <br />
       <v-row>
-        <v-col cols="0"  md="6"> </v-col>
+        <v-col cols="0" md="6"> </v-col>
         <v-col cols="12" md="6">
           <v-text-field
-            style="width:60%;float:right"
+            color="redUfps"
+            style="width: 60%; float: right"
             outlined
             dense
             hint="Titulo"
@@ -24,45 +24,52 @@
       <v-row>
         <v-col
           cols="12"
-          md="6"
-          lg="4"
+          sm="6"
+          md="4"
+          lg="3"
           v-for="(proyecto, index) in filteredProyectos.slice(
             (this.pagination.page - 1) * this.pagination.perPage,
             this.pagination.page * this.pagination.perPage
           )"
           :key="index"
         >
-          <v-card
-            elevation="10"
-            color="#AA1916"
-            style="padding:0 .5rem;"
-            dark
-          >
-            <v-row  >
-              <v-col cols="12"  sm="8" lg="6" >
-                <v-card-title
-                  class="headline"
-                  v-text="proyecto.attributes.nombre_documento"
-                ></v-card-title>
+          <v-card elevation="10" color="white" class="ma-5" shaped>
+            <v-img
+              :src="proyecto.attributes.imagen"
+              :alt="proyecto.attributes.nombre_documento"
+              class="white--text align-end"
+              gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+              height="200px"
+            >
+              <v-card-title
+                v-text="proyecto.attributes.nombre_documento"
+              ></v-card-title>
+            </v-img>
+            <v-card-text class="text-left font-weight-medium">
+              <strong class="black--text"> Autor: </strong>
+              {{ proyecto.attributes.nombre_autor }}<br />
+              <strong class="black--text"> Descripción: </strong>
+              <p v-line-clamp="5" v-text="proyecto.attributes.descripcion" />
+            </v-card-text>
 
-                <v-card-subtitle
-                  style="word-break: normal;"
-                  v-text="proyecto.attributes.descripcion"
+            <v-divider></v-divider>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn @click="abrirModal(proyecto.id)" icon>
+                <v-icon color="redUfps">mdi-eye-plus</v-icon>
+              </v-btn>
+              <v-btn icon>
+                <v-icon
+                  color="redUfps"
+                  @click="abrirDocumento(proyecto.attributes.descargar)"
+                  >mdi-file-pdf-outline</v-icon
                 >
-                </v-card-subtitle>
-              </v-col>
-              <v-col cols="12" sm="4" lg="6" >
-                <v-avatar class="ma-1" size="120" tile>
-                  <img
-                    :src="proyecto.attributes.imagen"
-                  >
-                </v-avatar>
-                <v-btn class="primary">Descargar</v-btn>
-              </v-col>
-           </v-row>
+              </v-btn>
+            </v-card-actions>
           </v-card>
         </v-col>
         <v-pagination
+          color="redUfps"
           v-model="pagination.page"
           :length="
             Math.ceil(this.filteredProyectos.length / pagination.perPage)
@@ -74,146 +81,35 @@
           elevation="10"
           color="rgb(188,0,23)"
           width="80%"
-          style="padding:3rem;margin:auto auto;"
+          style="padding: 3rem; margin: auto auto"
         >
           <h2>No existen coincidencias</h2>
         </v-card>
       </v-row>
     </section>
+    <dialogo
+      :tipo="'proyecto'"
+      :id="idModal"
+      :dialog="dialog"
+      @cerrarDialogo="dialog = false"
+    />
   </div>
 </template>
 
 <script>
 import vuex from "vuex";
+import Dialogo from "../components/Dialogo.vue";
 export default {
+  components: { Dialogo },
   data() {
     return {
+      idModal: 0,
+      dialog: false,
       searchText: "",
       pagination: {
         page: 1,
         perPage: 6,
       },
-      proyectos: [
-        {
-          id: 1,
-          titulo: "Macroscopología en hongos.",
-          descripcion:
-            "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Culpa fugit, magnam earum consequatur, obcaecati aspernatur molestias recusandae laudantium.",
-          foto: "slide1.jpg",
-        },
-        {
-          id: 2,
-          titulo: "Microorizas y su búsqueda.",
-          descripcion:
-            "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Culpa fugit, magnam earum consequatur, obcaecati aspernatur molestias recusandae laudantium.",
-          foto: "slide2.jpg",
-        },
-        {
-          id: 3,
-          titulo: "Hongos y sus carácteristicas.",
-          descripcion:
-            "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Culpa fugit, magnam earum consequatur, obcaecati aspernatur molestias recusandae laudantium.",
-          foto: "slide3.jpg",
-        },
-        {
-          id: 4,
-          titulo: "Levaduras y sus ventajas.",
-          descripcion:
-            "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Culpa fugit, magnam earum consequatur, obcaecati aspernatur molestias recusandae laudantium.",
-          foto: "slide4.jpg",
-        },
-        {
-          id: 5,
-          titulo: "Bacterias y sus patologias.",
-          descripcion:
-            "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Culpa fugit, magnam earum consequatur, obcaecati aspernatur molestias recusandae laudantium.",
-          foto: "slide5.jpg",
-        },
-        {
-          id: 6,
-          titulo: "Actinomicetos Silvestres .",
-          descripcion:
-            "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Culpa fugit, magnam earum consequatur, obcaecati aspernatur molestias recusandae laudantium.",
-          foto: "slide2.jpg",
-        },
-        {
-          id: 7,
-          titulo: "Hongos y sus carácteristicas.",
-          descripcion:
-            "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Culpa fugit, magnam earum consequatur, obcaecati aspernatur molestias recusandae laudantium.",
-          foto: "slide3.jpg",
-        },
-        {
-          id: 8,
-          titulo: "Actinomicetos Silvestres .",
-          descripcion:
-            "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Culpa fugit, magnam earum consequatur, obcaecati aspernatur molestias recusandae laudantium.",
-          foto: "slide1.jpg",
-        },
-        {
-          id: 9,
-          titulo: "Macroscopología en hongos consectetur .",
-          descripcion:
-            "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Culpa fugit, magnam earum consequatur, obcaecati aspernatur molestias recusandae laudantium.",
-          foto: "slide4.jpg",
-        },
-        {
-          id: 10,
-          titulo: "Bacterias y sus patologias.",
-          descripcion:
-            "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Culpa fugit, magnam earum consequatur, obcaecati aspernatur molestias recusandae laudantium.",
-          foto: "slide5.jpg",
-        },
-        {
-          id: 11,
-          titulo: "Levaduras y sus ventajas.",
-          descripcion:
-            "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Culpa fugit, magnam earum consequatur, obcaecati aspernatur molestias recusandae laudantium.",
-          foto: "slide2.jpg",
-        },
-        {
-          id: 12,
-          titulo: "Microorizas y su búsqueda.",
-          descripcion:
-            "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Culpa fugit, magnam earum consequatur, obcaecati aspernatur molestias recusandae laudantium.",
-          foto: "slide3.jpg",
-        },
-        {
-          id: 13,
-          titulo: "Macroscopología en hongos consectetur .",
-          descripcion:
-            "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Culpa fugit, magnam earum consequatur, obcaecati aspernatur molestias recusandae laudantium.",
-          foto: "slide4.jpg",
-        },
-        {
-          id: 14,
-          titulo: "Microorizas y su búsqueda.",
-          descripcion:
-            "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Culpa fugit, magnam earum consequatur, obcaecati aspernatur molestias recusandae laudantium.",
-          foto: "slide2.jpg",
-        },
-        {
-          id: 15,
-          titulo: "Hongos y sus carácteristicas.",
-          descripcion:
-            "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Culpa fugit, magnam earum consequatur, obcaecati aspernatur molestias recusandae laudantium.",
-          foto: "slide3.jpg",
-        },
-        {
-          id: 16,
-          titulo: "Levaduras y sus ventajas.",
-          descripcion:
-            "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Culpa fugit, magnam earum consequatur, obcaecati aspernatur molestias recusandae laudantium.",
-          foto: "slide1.jpg",
-        },
-        {
-          id: 17,
-          titulo: "Osos y sus ventajas.",
-          descripcion:
-            "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Culpa fugit, magnam earum consequatur, obcaecati aspernatur molestias recusandae laudantium.",
-          foto: "slide5.jpg",
-        },
-      ],
     };
   },
   methods: {
@@ -228,17 +124,27 @@ export default {
         this.pagination.perPage = 4;
         return;
       }
-      if (screenWidth < 960 ) {
+      if (screenWidth < 960) {
         this.pagination.perPage = 3;
         return;
       }
+    },
+    abrirModal(id) {
+      this.idModal = id;
+      this.dialog = true;
+    },
+    abrirDocumento(url) {
+      window.open(url);
     },
   },
   computed: {
     ...vuex.mapGetters(["getProyectos"]),
     filteredProyectos() {
       return this.getProyectos.filter((proyecto) => {
-        let filterBy = proyecto.attributes.nombre_documento+" "+proyecto.attributes.nombre_autor;
+        let filterBy =
+          proyecto.attributes.nombre_documento +
+          " " +
+          proyecto.attributes.nombre_autor;
         if (filterBy.toLowerCase().match(this.searchText.toLowerCase())) {
           this.pagination.page = 1;
           return filterBy.toLowerCase().match(this.searchText.toLowerCase());
@@ -247,20 +153,17 @@ export default {
     },
   },
   created() {
-    this.commitProyectos();
+    if (!this.getProyectos.length) {
+      this.commitProyectos();
+    }
     this.perPage();
   },
 };
 </script>
 <style lang="scss" scoped>
 #proyectos {
-  
   padding: 4rem 2rem 1rem 2rem; //top right bottom left
-   background: linear-gradient(
-      rgba(255, 255, 255, 0.4),
-      rgba(255, 255, 255, 0.4)
-    ),
-    url(../../public/images/fotos/lab.jpg);
+  background: linear-gradient(#e9ecee, #e9ecee);
   background-size: cover;
   background-attachment: fixed;
 }

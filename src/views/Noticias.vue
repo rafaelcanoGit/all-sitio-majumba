@@ -2,15 +2,17 @@
   <section id="section-1">
     <div id="div-identidad">
       <v-row>
-        <v-col cols="8" md="6">
+        <v-col lg="8" md="8" sm="8">
           <v-img
+            width="50%"
             id="logoUfps"
             :src="require('../../public/images/fotos/' + logoUfps)"
           >
           </v-img>
         </v-col>
-        <v-col cols="4" md="6">
+        <v-col lg="4" md="4" sm="4">
           <v-img
+            max-width="30%"
             id="escudoColombia"
             :src="require('../../public/images/fotos/' + EscudoColombia)"
           >
@@ -19,7 +21,7 @@
       </v-row>
     </div>
 
-    <v-row>
+    <v-row v-if="getNoticias.length">
       <v-col cols="12" md="8">
         <!-- index lleva seguimiento del carousel, ya que internamente aumenta solo -->
         <v-carousel
@@ -47,8 +49,7 @@
             ripple
             :src="noticia.attributes.imagen"
           >
-          </v-carousel-item> 
-        </v-carousel
+          </v-carousel-item> </v-carousel
       ></v-col>
       <v-col cols="12" md="4">
         <h3>
@@ -64,14 +65,16 @@
           ]"
           @click="GoIndex(i)"
         >
-          <v-row>
-            <v-col cols="10">
-              <p>{{ noticia.attributes.titulo }}</p>
+          <v-row class="ml-1">
+            <v-col cols="10" xl="10" lg="9" md="9" sm="9">
+              <p class="white--text text-left" v-line-clamp="2">
+                {{ noticia.attributes.titulo }}
+              </p>
             </v-col>
-            <v-col cols="2">
+            <v-col cols="2" xl="2" lg="3" md="3" sm="3">
               <v-btn
                 id="btn-ver-noticia"
-                class="primary"
+                color="#ffff"
                 @click="GoNoticia(noticia)"
                 >Ver más
               </v-btn></v-col
@@ -80,10 +83,19 @@
         </div>
       </v-col>
     </v-row>
-    <!--  <router-link :to="{ name: 'Home' }">Home</router-link>
-
-      <router-view name="home" />
-        Para las rutas, el componente se muestra acá -->
+    <v-row v-else>
+      <v-col>
+        <v-card
+          height="30vh"
+          elevation="10"
+          color="rgb(188,0,23)"
+          width="80%"
+          style="padding: 3rem; margin: auto auto"
+        >
+          <h2>No hay noticias</h2>
+        </v-card>
+      </v-col>
+    </v-row>
   </section>
 </template>
 <script>
@@ -95,61 +107,19 @@ export default {
       index: 0,
       logoUfps: "Logo-ufps.png",
       EscudoColombia: "escudo_colombia.png",
-      noticias: [
-        {
-          id: 1,
-          title: "Lorem ipsum dolor sit amet consectetur adipisicing.",
-          body:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magnam modi velit totam voluptatibus, quidem officiis veritatis! Expedita, blanditiis exercitationem cupiditate provident asperiores unde laudantium aliquid. Rerum molestiae facilis harum nam debitis asperiores, at aperiam ea optio praesentium eligendi minima iure architecto exercitationem perferendis placeat maxime, expedita voluptatum sint vel. Facere perspiciatis necessitatibus odit tenetur nulla accusantium porro dignissimos sunt est eveniet soluta quasi provident omnis dolores veniam fugit officia vero at molestiae veritatis, amet natus libero? Neque earum pariatur reiciendis, quo quos ad et ab dolorum nostrum, eaque expedita ex doloremque maxime excepturi hic quasi ullam, at atque doloribus laborum.",
-          name: "slide1.jpg",
-          tipo: "cuerpo",
-        },
-        {
-          id: 2,
-          title: "Lorem ipsum dolor sit amet consectetur adipisicing.",
-          name: "slide2.jpg",
-          tipo: "link",
-          link: "https://ww2.ufps.edu.co/",
-        },
-        {
-          id: 3,
-          title: "Lorem ipsum dolor sit amet consectetur adipisicing.",
-          body:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magnam modi velit totam voluptatibus, quidem officiis veritatis! Expedita, blanditiis exercitationem cupiditate provident asperiores unde laudantium aliquid. Rerum molestiae facilis harum nam debitis asperiores, at aperiam ea optio praesentium eligendi minima iure architecto exercitationem perferendis placeat maxime, expedita voluptatum sint vel. Facere perspiciatis necessitatibus odit tenetur nulla accusantium porro dignissimos sunt est eveniet soluta quasi provident omnis dolores veniam fugit officia vero at molestiae veritatis, amet natus libero? Neque earum pariatur reiciendis, quo quos ad et ab dolorum nostrum, eaque expedita ex doloremque maxime excepturi hic quasi ullam, at atque doloribus laborum.",
-          name: "slide3.jpg",
-          tipo: "cuerpo",
-        },
-        {
-          id: 4,
-          title: "Lorem ipsum dolor sit amet consectetur adipisicing.",
-          name: "slide4.jpg",
-          tipo: "link",
-          link: "https://ww2.ufps.edu.co/",
-        },
-        {
-          id: 5,
-          title: "Lorem ipsum dolor sit amet consectetur adipisicing.",
-          body:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magnam modi velit totam voluptatibus, quidem officiis veritatis! Expedita, blanditiis exercitationem cupiditate provident asperiores unde laudantium aliquid. Rerum molestiae facilis harum nam debitis asperiores, at aperiam ea optio praesentium eligendi minima iure architecto exercitationem perferendis placeat maxime, expedita voluptatum sint vel. Facere perspiciatis necessitatibus odit tenetur nulla accusantium porro dignissimos sunt est eveniet soluta quasi provident omnis dolores veniam fugit officia vero at molestiae veritatis, amet natus libero? Neque earum pariatur reiciendis, quo quos ad et ab dolorum nostrum, eaque expedita ex doloremque maxime excepturi hic quasi ullam, at atque doloribus laborum.",
-          name: "slide5.jpg",
-          tipo: "cuerpo",
-        },
-      ],
+      noticias: [],
     };
   },
   methods: {
-    ...vuex.mapActions([
-      "commitNoticias",
-      "commitNovedades",
-      "commitActividades",
-    ]),
-
+    ...vuex.mapActions(["commitNoticias"]),
     GoNoticia(noticia) {
-      if (noticia.tipo == "cuerpo") {
-        let id = noticia.id;
-        this.$router.push({ name: "noticia", params: { id } });
+      if (noticia.attributes.cuerpo) {
+        this.$router.push({
+          name: "noticia",
+          params: { slug: noticia.attributes.slug },
+        });
       } else {
-        window.open(noticia.link, "_blank");
+        window.open(noticia.attributes.link);
       }
     },
     GoIndex(value) {
@@ -160,7 +130,9 @@ export default {
     ...vuex.mapGetters(["getNoticias"]),
   },
   created() {
-    this.commitNoticias(); 
+    if (!this.getNoticias.length) {
+      this.commitNoticias();
+    }
   },
 };
 </script>
@@ -168,33 +140,16 @@ export default {
 <style lang="scss" scoped>
 #section-1 {
   width: 100%;
-
-  background: linear-gradient(
-      rgba(255, 255, 255, 0.4),
-      rgba(255, 255, 255, 0.4)
-    ),
-    url(../../public/images/fotos/lab.jpg);
+  background: linear-gradient(#e9ecee, #e9ecee);
   background-size: cover;
   background-attachment: fixed;
 }
 
 #div-identidad {
-  height: 7rem;
   width: 100%;
   background-size: cover;
   background-attachment: fixed;
-
-  #logoUfps {
-    margin: 0 auto; /* Superior-inferior , derecha-izquierda */
-    height: 6rem;
-    width: 60%;
-  }
-
-  #escudoColombia {
-    margin: 0 auto;
-    height: 5.5rem;
-    width: 13%;
-  }
+  text-align: -webkit-center;
 }
 
 #carousel {
@@ -206,7 +161,7 @@ export default {
   height: 4rem;
   width: 98%;
   margin: 0.3rem;
-  background-color: #2196f3;
+  background-color: #aa1916;
 }
 .noticia-titulo-hover,
 #noticia-titulo:hover {
@@ -215,7 +170,7 @@ export default {
   height: 4.5rem;
   width: 100%;
   margin-left: -2rem;
-  background-color: #bbdefb;
+  background-color: #aa1916a8;
 }
 
 #noticia-titulo {
@@ -237,17 +192,11 @@ export default {
 
 @media screen and (max-width: 1260px) {
   /* On screens that are 960px or less*/
-  #div-identidad {
-    height: 6rem;
-
-    #logoUfps {
-      height: 5rem;
-      width: 70%;
-    }
-    #escudoColombia {
-      height: 5rem;
-      width: 20%;
-    }
+  #logoUfps {
+    width: 80%;
+  }
+  #escudoColombia {
+    width: 30%;
   }
 
   #carousel {
@@ -269,77 +218,43 @@ export default {
   }
 }
 @media screen and (max-width: 960px) {
-  /* On screens that are 960px or less*/
-  #div-identidad {
-    height: 6rem;
-    #logoUfps {
-      height: 5rem;
-      width: 70%;
-    }
-    #escudoColombia {
-      height: 5rem;
-      width: 35%;
-    }
+  #logoUfps {
+    width: 70%;
+  }
+  #escudoColombia {
+    width: 35%;
   }
 }
 @media screen and (max-width: 812px) {
-  /* On screens that are 960px or less*/
-  #div-identidad {
-    height: 6rem;
-
-    #logoUfps {
-      height: 4.5rem;
-      width: 80%;
-    }
-    #escudoColombia {
-      height: 4.5rem;
-      width: 35%;
-    }
+  #logoUfps {
+    width: 80%;
+  }
+  #escudoColombia {
+    width: 35%;
   }
 }
 @media screen and (max-width: 676px) {
-  /* On screens that are 600px or less*/
-  #div-identidad {
-    height: 6rem;
-
-    #logoUfps {
-      height: 4.5rem;
-      width: 90%;
-    }
-    #escudoColombia {
-      height: 4.5rem;
-      width: 40%;
-    }
+  #logoUfps {
+    width: 90%;
+  }
+  #escudoColombia {
+    width: 20%;
   }
 }
 @media screen and (max-width: 560px) {
-  /* On screens that are 600px or less */
-  #div-identidad {
-    height: 6rem;
-
-    #logoUfps {
-      height: 4.5rem;
-      width: 100%;
-    }
-    #escudoColombia {
-      height: 4.5rem;
-      width: 50%;
-    }
+  #logoUfps {
+    width: 100%;
+  }
+  #escudoColombia {
+    width: 50%;
   }
 }
 @media screen and (max-width: 450px) {
-  /* On screens that are 600px or less */
-  #div-identidad {
-    height: 6rem;
-
-    #logoUfps {
-      height: 4rem;
-      width: 100%;
-    }
-    #escudoColombia {
-      height: 4rem;
-      width: 50%;
-    }
+  #logoUfps {
+    width: 100%;
+  }
+  #escudoColombia {
+    width: 50%;
   }
 }
 </style>

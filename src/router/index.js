@@ -13,7 +13,6 @@ import Banco from "../views/Banco.vue"
 import Footer from "../views/Footer.vue"
 
 import Noticia from "../components/Noticia.vue";
-import Investigador from "../components/Investigador.vue";
 import Novedad from "../components/Novedad.vue";
 import Actividad from "../components/Actividad.vue";
 import Cepa from "../components/Cepa.vue";
@@ -23,6 +22,7 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
+    name: "home",
     components: {
       noticias: Noticias,
       nosotros: Nosotros,
@@ -31,38 +31,32 @@ const routes = [
       banco: Banco,
       publicaciones: Publicaciones,
       equipamentos: Equipamentos,
-      actividades:Actividades,
+      actividades: Actividades,
       novedades: Novedades,
       footer: Footer
     }
 
   },
   {
-    path: "/noticia/:id",
+    path: "/noticia/:slug",
     name: "noticia",
     component: Noticia
   },
   {
-    path: "/investigador/:id",
-    name: "investigador",
-    component: Investigador
-  },
-  {
-    path: "/novedad/:id",
+    path: "/novedad/:slug",
     name: "novedad",
     component: Novedad
   },
   {
-    path: "/actividad/:id",
+    path: "/actividad/:slug",
     name: "actividad",
     component: Actividad
   },
   {
     path: "/cepa/:grupo_microbiano/:slug",
     name: "cepa",
-    component : Cepa
+    component: Cepa
   }
-
 ];
 
 const router = new VueRouter({

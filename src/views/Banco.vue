@@ -13,7 +13,7 @@
           icons-and-text
         >
           <v-tabs-slider
-            color="#2196f3
+            color="#ffffff
           "
           ></v-tabs-slider>
           <v-tab
@@ -23,7 +23,6 @@
             @click="filteredCepas(cepa)"
           >
             {{ cepa }}
-            <v-icon v-if="cepa === 'Todas'">mdi-ballot-outline</v-icon>
             <v-icon v-if="cepa === 'Bacterias'">mdi-bacteria</v-icon>
             <v-icon v-if="cepa === 'Hongos'">mdi-mushroom</v-icon>
             <v-icon v-if="cepa === 'Actinomicetos'">mdi-virus-outline</v-icon>
@@ -38,6 +37,7 @@
                 <h1>{{ tab }}</h1>
                 <v-spacer></v-spacer>
                 <v-text-field
+                  color="redUfps"
                   v-model="search"
                   append-icon="mdi-magnify"
                   label="Search"
@@ -57,12 +57,16 @@
                 no-results-text="No existen coincidencias"
               >
                 <template v-slot:[`item.actions`]="{ item }">
-                  <v-icon color="#2196f3" @click="verItem(item)">
+                  <v-icon color="#AA1916" @click="verItem(item)">
                     mdi-eye
                   </v-icon>
                 </template>
               </v-data-table>
-              <v-pagination v-model="page" :length="pageCount"></v-pagination>
+              <v-pagination
+                color="#AA1916"
+                v-model="page"
+                :length="pageCount"
+              ></v-pagination>
             </v-card>
           </v-tab-item>
         </v-tabs-items>
@@ -83,7 +87,6 @@
 <script>
 import vuex from "vuex";
 export default {
-  mounted() {},
   data() {
     return {
       cepasTab: ["Bacterias", "Hongos", "Actinomicetos", "Levaduras"],
@@ -117,11 +120,7 @@ export default {
           text: "Origen",
           value: "origen",
         },
-        {
-          text: "Otras Características",
-          value: "otras_caracteristicas",
-        },
-        { text: "Acción", value: "actions", sortable: false },
+        { text: "Ver", value: "actions", sortable: false },
       ],
       cepas: [],
       bacterias: [],
@@ -137,11 +136,8 @@ export default {
       "commitActinomicetos",
       "commitLevaduras",
     ]),
-
     filteredCepas(cepa) {
       if (cepa === "Bacterias") {
-        // this.search= cepa.slice(-cepa.lenght,-1);
-        //this.search = cepa.slice(0, -1); //Tbm Sirve
         this.cepas = this.bacterias;
       } else if (cepa === "Hongos") {
         this.cepas = this.hongos;
@@ -151,59 +147,60 @@ export default {
         this.cepas = this.levaduras;
       }
     },
-    llenarCepas() {
-      this.getBacterias.forEach((element) => {
-        this.bacterias.push(element.attributes);
-      });
-      this.getHongos.forEach((element) => {
-        this.hongos.push(element.attributes);
-      });
-      this.getActinomicetos.forEach((element) => {
-        this.actinomicetos.push(element.attributes);
-      });
-      this.getLevaduras.forEach((element) => {
-        this.levaduras.push(element.attributes);
-      });
-      this.cepas = this.bacterias;
-    },
     verItem(item) {
       let grupo = item.grupo_microbiano.toLowerCase();
-      if (grupo === "Hongo Filamentoso") {
+      if (grupo === "hongo filamentoso") {
         grupo = "hongo";
       }
       this.$router.push({
         name: "cepa",
         params: { grupo_microbiano: grupo, slug: item.slug },
       });
-      console.log(item);
     },
   },
   computed: {
     ...vuex.mapGetters([
-      "getCepas",
       "getBacterias",
       "getHongos",
       "getActinomicetos",
       "getLevaduras",
     ]),
   },
+  watch: {
+    getBacterias() {
+      this.getBacterias.forEach((element) => {
+        this.bacterias.push(element.attributes);
+      });
+      this.cepas = this.bacterias;
+    },
+    getHongos() {
+      this.getHongos.forEach((element) => {
+        this.hongos.push(element.attributes);
+      });
+    },
+    getActinomicetos() {
+      this.getActinomicetos.forEach((element) => {
+        this.actinomicetos.push(element.attributes);
+      });
+    },
+    getLevaduras() {
+      this.getLevaduras.forEach((element) => {
+        this.levaduras.push(element.attributes);
+      });
+    },
+  },
   created() {
     this.commitBacterias();
     this.commitHongos();
     this.commitActinomicetos();
     this.commitLevaduras();
-    this.llenarCepas();
   },
 };
 </script>
 
 <style lang="scss" scoped>
 #banco {
-  background: linear-gradient(
-      rgba(255, 255, 255, 0.4),
-      rgba(255, 255, 255, 0.4)
-    ),
-    url(../../public/images/fotos/lab.jpg);
+  background: linear-gradient(#e9ecee, #e9ecee);
   background-size: cover;
   background-attachment: fixed;
 }

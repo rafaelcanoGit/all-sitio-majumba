@@ -8,6 +8,7 @@
         <v-col cols="0" md="6"> </v-col>
         <v-col cols="12" md="6">
           <v-text-field
+            color="redUfps"
             style="width: 60%; float: right"
             outlined
             dense
@@ -29,41 +30,40 @@
           )"
           :key="index"
         >
-          <v-card color="#AA1916" dark>
-            <v-row style="padding: 0; margin: 0 0.3rem">
-              <v-col md="6" lg="8" style="padding: 0">
-                <v-card-title
-                  style="word-break: normal"
-                  v-text="equipamento.attributes.nombre"
-                ></v-card-title>
-                <h3 style="word-break: normal">
-                  Función: {{ equipamento.attributes.funcion }}
-                </h3>
-              </v-col>
-              <v-col md="6" lg="4" style="padding: 0">
-                <v-avatar size="120" class="ma-3" style="margin: auto auto">
-                  <v-img :src="equipamento.attributes.imagen"> </v-img>
-                </v-avatar>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col style="padding: 0 1.5rem" md="12">
-                <v-textarea
-                  color="primary"
-                  style="margin: auto auto"
-                  outlined
-                  label="Características:"
-                  readonly
-                  filled
-                  :value="equipamento.attributes.caracteristicas"
-                >
-                  <v-icon color="primary">mdi-arrow-right-box</v-icon>
-                </v-textarea>
-              </v-col>
-            </v-row>
+          <v-card elevation="10" color="white" class="ma-5" shaped>
+            <v-img
+              :src="equipamento.attributes.imagen"
+              :alt="equipamento.attributes.nombre"
+              class="white--text align-end"
+              gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+              height="200px"
+            >
+              <v-card-title
+                v-text="equipamento.attributes.nombre"
+              ></v-card-title>
+            </v-img>
+            <v-card-text class="text-left font-weight-medium">
+              <strong class="black--text"> Funcion: </strong>
+              {{ equipamento.attributes.funcion }}
+              <br />
+              <strong class="black--text"> Características: </strong>
+              <p
+                v-line-clamp="5"
+                v-text="equipamento.attributes.caracteristicas"
+              />
+            </v-card-text>
+
+            <v-divider></v-divider>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn @click="abrirModal(equipamento.id)" icon>
+                <v-icon color="redUfps">mdi-eye-plus</v-icon>
+              </v-btn>
+            </v-card-actions>
           </v-card>
         </v-col>
         <v-pagination
+          color="#AA1916"
           v-model="pagination.page"
           :length="
             Math.ceil(this.filteredEquipamentos.length / pagination.perPage)
@@ -81,6 +81,12 @@
         </v-card>
       </v-row>
     </section>
+    <dialogo
+      :tipo="'equipamiento'"
+      :id="idModal"
+      :dialog="dialog"
+      @cerrarDialogo="dialog = false"
+    />
   </div>
 </template>
 <script>
@@ -93,119 +99,12 @@ export default {
         page: 1,
         perPage: 6,
       },
-      equipamentos: [
-        {
-          id: 1,
-          nombre: "Lorem ipsum dolor sit.Lorem ipsum dolor sit",
-          funcion: "xxxxx",
-          caracteristicas: [
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis!",
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis!",
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis!",
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis!",
-          ],
-          imagen: "slide1.jpg",
-        },
-        {
-          id: 2,
-          nombre: "Lorem ipsum dolor sit.",
-          funcion: "xxxxx",
-          caracteristicas:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis Lorem ipsum dolor sit amet, ",
-          imagen: "slide2.jpg",
-        },
-        {
-          id: 3,
-          nombre: "Lorem ipsum dolor sit.",
-          funcion: "xxxxx",
-          caracteristicas:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis!     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis!",
-          imagen: "slide3.jpg",
-        },
-        {
-          id: 4,
-          nombre: "Lorem ipsum dolor sit.",
-          funcion: "xxxxx",
-          caracteristicas: "",
-          imagen: "slide4.jpg",
-        },
-        {
-          id: 5,
-          nombre: "Lorem ipsum dolor sit.",
-          funcion: "xxxxx",
-          caracteristicas:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis!     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis!",
-
-          imagen: "slide5.jpg",
-        },
-        {
-          id: 6,
-          nombre: "There are ipsum dolor sit.",
-          funcion: "xxxxx",
-          caracteristicas:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis!     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis!",
-
-          imagen: "slide3.jpg",
-        },
-        {
-          id: 7,
-          nombre: "Lorem ipsum dolor sit.",
-          funcion: "xxxxx",
-          caracteristicas:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis!     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis!",
-
-          imagen: "slide1.jpg",
-        },
-        {
-          id: 8,
-          nombre: "Lorem ipsum dolor sit.",
-          funcion: "xxxxx",
-          caracteristicas:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis!     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis!",
-
-          imagen: "slide2.jpg",
-        },
-        {
-          id: 9,
-          nombre: "Lorem ipsum dolor sit.",
-          funcion: "xxxxx",
-          caracteristicas:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis!     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis!",
-
-          imagen: "slide3.jpg",
-        },
-        {
-          id: 10,
-          nombre: "Lorem ipsum dolor sit.",
-          funcion: "xxxxx",
-          caracteristicas:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis!     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis!",
-
-          imagen: "slide4.jpg",
-        },
-        {
-          id: 11,
-          nombre: "Lorem ipsum dolor sit.",
-          funcion: "xxxxx",
-          caracteristicas:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis!     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis!",
-
-          imagen: "slide5.jpg",
-        },
-        {
-          id: 12,
-          nombre: "There are ipsum dolor sit.",
-          funcion: "xxxxx",
-          caracteristicas:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis!     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, perspiciatis!",
-
-          imagen: "slide3.jpg",
-        },
-      ],
+      idModal: 0,
+      dialog: false,
     };
   },
   methods: {
-    ...vuex.mapActions(["commitEquipamentos"]),
+    ...vuex.mapActions(["commitEquipamientos"]),
     perPage() {
       let screenWidth = screen.width;
       if (screenWidth > 960) {
@@ -221,12 +120,16 @@ export default {
         return;
       }
     },
+    abrirModal(id) {
+      this.idModal = id;
+      this.dialog = true;
+    },
   },
   computed: {
-    ...vuex.mapGetters(["getEquipamentos"]),
+    ...vuex.mapGetters(["getEquipamientos"]),
 
     filteredEquipamentos() {
-      return this.getEquipamentos.filter((equipamento) => {
+      return this.getEquipamientos.filter((equipamento) => {
         let filterBy =
           equipamento.attributes.nombre + " " + equipamento.attributes.funcion;
 
@@ -238,7 +141,9 @@ export default {
     },
   },
   created() {
-    this.commitEquipamentos();
+    if (!this.getEquipamientos.length) {
+      this.commitEquipamientos();
+    }
     this.perPage();
   },
 };
@@ -246,19 +151,8 @@ export default {
 <style lang="scss" scoped>
 #equipamentos {
   padding: 4rem 2rem 1rem 2rem; //top right bottom left
-  background: linear-gradient(
-      rgba(255, 255, 255, 0.6),
-      rgba(255, 255, 255, 0.6)
-    ),
-    url(../../public/images/fotos/lab.jpg);
+  background: linear-gradient(#e9ecee, #e9ecee);
   background-size: cover;
   background-attachment: fixed;
-}
-
-@media screen and (max-width: 1960px) {
-}
-@media screen and (max-width: 1260px) {
-}
-@media screen and (max-width: 960px) {
 }
 </style>

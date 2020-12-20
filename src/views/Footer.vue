@@ -1,35 +1,38 @@
 <template>
   <footer id="footer">
     <br />
-    <v-row >
-      <v-col cols="4" style="padding:0rem">
-        <v-row>
-          <v-col cols="12">
-            <v-img
-              style="height:15vh;width:50%;margin: auto auto"
-              :src="require('../../public/images/fotos/majumba2.png')"
-            ></v-img> </v-col
-          ><br />
-
-          <v-col cols="12">
-            <v-img
-              style="height:20vh;width:28vh;margin: auto auto;"
-              :src="require('../../public/images/fotos/logoufpsvertical.png')"
-            >
-            </v-img>
-          </v-col>
-        </v-row>
-      </v-col>
-      <v-col cols="8"> </v-col>
-    </v-row>
-    <v-row>
-      <v-col>
-        <h3 class="white--text">
-          2020 © All Rights Reserved. Desarrollado por: VAVM - División de
-          Sistemas
-        </h3>
-      </v-col>
-    </v-row>
+    <v-container>
+      <v-row justify="center" align="center">
+        <v-col md="5" cols="12" sm="6" lg="5">
+          <v-img
+            style="width: 30vh; margin: auto auto"
+            :src="require('../../public/images/fotos/logoufpsvertical.png')"
+          >
+          </v-img>
+        </v-col>
+        <v-col md="5" cols="12" sm="6" lg="5">
+          <v-img
+            style="width: 40vh; margin: auto auto"
+            :src="require('../../public/images/fotos/majumba2.png')"
+          ></v-img>
+        </v-col>
+        <v-col md="2" cols="12" sm="6" class="white--text text-left" lg="2"
+          ><div class="headline">
+            <h3 class="mb-5">Contacto</h3>
+          </div>
+          Avenida Gran Colombia No. 12E-96 Barrio Colsag, San José de Cúcuta -
+          Colombia Teléfono (057)(7) 5776655
+        </v-col>
+      </v-row>
+      <v-row justify="center">
+        <v-col>
+          <h3 class="white--text">
+            2020 © All Rights Reserved. Desarrollado por: Rafael Cano - Dumar
+            Basto
+          </h3>
+        </v-col>
+      </v-row>
+    </v-container>
   </footer>
 </template>
 
@@ -40,6 +43,10 @@ export default {};
 <style lang="scss" scoped>
 #footer {
   background-color: #272727;
-  
+}
+.headline {
+  display: block;
+  margin: 10px 0 25px 0;
+  border-bottom: 1px dotted #aa1916;
 }
 </style>

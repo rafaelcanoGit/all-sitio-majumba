@@ -9,6 +9,7 @@
         <v-col cols="0" md="6"> </v-col>
         <v-col cols="12" md="6">
           <v-text-field
+            color="redUfps"
             style="width: 60%; float: right"
             outlined
             dense
@@ -34,20 +35,43 @@
           )"
           :key="index"
         >
-          <v-card elevation="10" color="#AA1916" style="padding: 1rem" dark>
-            <v-img :src="publicacion.attributes.imagen" height="12rem"> </v-img>
-            <v-card-title style="color: #f5f5f5; word-break: normal">
-              {{ publicacion.attributes.nombre_documento }}
-            </v-card-title>
-            <v-card-subtitle>
-              {{ publicacion.attributes.descripcion }}
-            </v-card-subtitle>
+          <v-card elevation="10" color="white" class="ma-5" shaped>
+            <v-img
+              :src="publicacion.attributes.imagen"
+              :alt="publicacion.attributes.nombre_documento"
+              class="white--text align-end"
+              gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+              height="200px"
+            >
+              <v-card-title
+                v-text="publicacion.attributes.nombre_documento"
+              ></v-card-title>
+            </v-img>
+            <v-card-text class="text-left font-weight-medium">
+              <strong class="black--text"> Autor: </strong>
+              {{ publicacion.attributes.nombre_autor }}<br />
+              <strong class="black--text"> Descripción: </strong>
+              <p v-line-clamp="5" v-text="publicacion.attributes.descripcion" />
+            </v-card-text>
+
+            <v-divider></v-divider>
             <v-card-actions>
-              <v-btn style="margin: auto auto" class="primary">Descargar</v-btn>
+              <v-spacer></v-spacer>
+              <v-btn @click="abrirModal(publicacion.id)" icon>
+                <v-icon color="redUfps">mdi-eye-plus</v-icon>
+              </v-btn>
+              <v-btn icon>
+                <v-icon
+                  color="redUfps"
+                  @click="abrirDocumento(publicacion.attributes.descargar)"
+                  >mdi-file-pdf-outline</v-icon
+                >
+              </v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
         <v-pagination
+          color="#AA1916"
           v-model="pagination.page"
           :length="
             Math.ceil(this.filteredPublicaciones.length / pagination.perPage)
@@ -66,6 +90,12 @@
         </v-card>
       </v-row>
     </section>
+    <dialogo
+      :tipo="'publicacion'"
+      :id="idModal"
+      :dialog="dialog"
+      @cerrarDialogo="dialog = false"
+    />
   </div>
 </template>
 
@@ -74,6 +104,8 @@ import vuex from "vuex";
 export default {
   data() {
     return {
+      idModal: 0,
+      dialog: false,
       searchText: "",
       pagination: {
         page: 1,
@@ -102,6 +134,13 @@ export default {
         return;
       }
     },
+    abrirModal(id) {
+      this.idModal = id;
+      this.dialog = true;
+    },
+    abrirDocumento(url) {
+      window.open(url);
+    },
   },
   computed: {
     ...vuex.mapGetters(["getPublicaciones"]),
@@ -120,7 +159,9 @@ export default {
   },
 
   created() {
-    this.commitPublicaciones();
+    if (!this.getPublicaciones.length) {
+      this.commitPublicaciones();
+    }
     this.perPage();
   },
 };
@@ -129,11 +170,7 @@ export default {
 <style lang="scss" scoped>
 #publicaciones {
   padding: 4rem 2rem 1rem 2rem;
-  background: linear-gradient(
-      rgba(255, 255, 255, 0.4),
-      rgba(255, 255, 255, 0.4)
-    ),
-    url(../../public/images/fotos/lab.jpg);
+  background: linear-gradient(#e9ecee, #e9ecee);
   background-size: cover;
   background-attachment: fixed;
 }

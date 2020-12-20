@@ -1,61 +1,65 @@
 <template>
   <div>
     <hr />
-
     <section id="novedades">
       <h1>
         <v-icon color="black">mdi-newspaper-variant-multiple</v-icon> Novedades
       </h1>
       <br />
-      <v-row>
-        <v-col cols="0" lg="1"> </v-col>
-        <v-col cols="12" lg="10" style="background:#AA1916">
-          <carousel-3d
-            :autoplay="true"
-            :autoplayTimeout="3000"
-            :loop="true"
-            :controls-visible="true"
-            :controls-prev-html="'&#10092;'"
-            :controls-next-html="'&#10093;'"
-            :space="220"
-            :height="270"
-            :width="700"
-            :border="4"
-            :perspective="70"
-            :clickable="false"
-            :count="getNovedades.length"
-          >
-            <slide
-              class="slide"
-              v-for="(novedad, index) in getNovedades"
-              :index="index"
-              :key="index"
+      <v-container>
+        <v-row justify="center">
+          <v-col v-if="getNovedades.length">
+            <CarouselCard :interval="5000" type="card" arrow="always">
+              <CarouselCardItem v-for="(novedad, i) in getNovedades" :key="i">
+                <v-card elevation="10" color="white" class="ma-5" shaped>
+                  <v-img
+                    :src="novedad.attributes.imagen"
+                    class="white--text align-end"
+                    gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+                    height="200px"
+                  >
+                    <v-card-title
+                      v-text="novedad.attributes.titulo"
+                    ></v-card-title>
+                  </v-img>
+                  <v-card-actions>
+                    <v-spacer />
+                    <v-btn icon>
+                      <v-icon color="redUfps" @click="goNovedad(novedad)"
+                        >mdi-eye-plus</v-icon
+                      >
+                    </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </CarouselCardItem>
+            </CarouselCard>
+          </v-col>
+          <v-col v-else>
+            <v-card
+              height="30vh"
+              elevation="10"
+              color="rgb(188,0,23)"
+              width="80%"
+              style="padding: 3rem; margin: auto auto"
             >
-              <figure @click="goNovedad(novedad)">
-                <img
-                  :src="novedad.attributes.imagen"
-                />
-                <figcaption>
-                  {{ novedad.attributes.titulo }}
-                </figcaption>
-              </figure>
-            </slide>
-          </carousel-3d>
-        </v-col>
-        <v-col cols="0" lg="1"> </v-col> </v-row
-      ><br />
+              <h2>No hay novedades</h2>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
+      <br />
     </section>
   </div>
 </template>
 
 <script>
+import { CarouselCard, CarouselCardItem } from "vue-carousel-card";
 import vuex from "vuex";
-import { Carousel3d, Slide } from "vue-carousel-3d";
 
 export default {
   components: {
-    Carousel3d,
-    Slide,
+    CarouselCard,
+    CarouselCardItem,
   },
   data() {
     return {};
@@ -64,11 +68,13 @@ export default {
     ...vuex.mapActions(["commitNovedades"]),
 
     goNovedad(novedad) {
-      if (novedad.tipo == "cuerpo") {
-        let id = novedad.id;
-        this.$router.push({ name: "novedad", params: { id } });
+      if (novedad.attributes.cuerpo) {
+        this.$router.push({
+          name: "novedad",
+          params: { slug: novedad.attributes.slug },
+        });
       } else {
-        window.open(novedad.link, "_blank");
+        window.open(novedad.attributes.link);
       }
     },
   },
@@ -76,48 +82,18 @@ export default {
     ...vuex.mapGetters(["getNovedades"]),
   },
   created() {
-    this.commitNovedades();
-},
+    if (!this.getNovedades.length) {
+      this.commitNovedades();
+    }
+  },
 };
 </script>
 <style lang="scss" scoped>
+@import "~vue-carousel-card/styles/index.css";
 #novedades {
-  
   padding: 4rem 2rem 1rem 2rem; //top right bottom left
-  background: linear-gradient(
-      rgba(255, 255, 255, 0.4),
-      rgba(255, 255, 255, 0.4)
-    ),
-    url(../../public/images/fotos/lab.jpg);
+  background: linear-gradient(#e9ecee, #e9ecee);
   background-size: cover;
   background-attachment: fixed;
-}
-
-.carousel-3d-container {
-  figure {
-    // preview.css es el que contiene las clases
-    margin: 0;
-  }
-  figcaption {
-    position: absolute;
-    height: 30%;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: #fff;
-    bottom: 0;
-    bottom: 0;
-    padding: 1rem;
-    font-size: 1rem;
-    min-width: 100%;
-    box-sizing: border-box;
-  }
-  .next,
-  .prev {
-    //Por alguna razón no cambia, pero es la directva
-    color: #fff;
-  }
-}
-.slide {
-  cursor: pointer;
-  border: solid #2196f3;
 }
 </style>
