@@ -49,7 +49,7 @@ export default {
         isUsingVueRouter: false,
         mobileBreakpoint: 1290,
         brandImagePath: "http://bancodecepas.tgrado.ingsistemasufps.co",
-        brandImage: require("../public/images/fotos/majumba2.png"),
+        brandImage: require("../public/images/fotos/lab-icon-recortado.png"),
         brandImageAltText: "brand-image",
         showBrandImageInMobilePopup: true,
         ariaLabelMainNav: "Main Navigation",

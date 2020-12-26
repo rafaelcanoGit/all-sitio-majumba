@@ -3,20 +3,34 @@
     <br />
     <v-container>
       <v-row justify="center" align="center">
-        <v-col md="5" cols="12" sm="6" lg="5">
+        <v-col md="3" cols="6" sm="3" lg="3">
           <v-img
             style="width: 30vh; margin: auto auto"
             :src="require('../../public/images/fotos/logoufpsvertical.png')"
           >
           </v-img>
         </v-col>
-        <v-col md="5" cols="12" sm="6" lg="5">
+        <v-col md="3" cols="6" sm="3" lg="3">
           <v-img
             style="width: 40vh; margin: auto auto"
             :src="require('../../public/images/fotos/majumba2.png')"
           ></v-img>
         </v-col>
-        <v-col md="2" cols="12" sm="6" class="white--text text-left" lg="2"
+        <v-col md="3" cols="6" sm="3" lg="3">
+          <v-img
+            style="width: 30vh; margin: auto auto"
+            :src="
+              require('../../public/images/fotos/logo-gidis-sin-letras.png')
+            "
+          ></v-img>
+        </v-col>
+        <v-col md="3" cols="6" sm="3" lg="3">
+          <v-img
+            style="width: 30vh; margin: auto auto"
+            :src="require('../../public/images/fotos/logo-sistemas.png')"
+          ></v-img>
+        </v-col>
+        <v-col md="6" cols="12" sm="6" class="white--text text-left" lg="6"
           ><div class="headline">
             <h3 class="mb-5">Contacto</h3>
           </div>
